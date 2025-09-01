@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+Weather Report
+{% endblock %}
+
+{% block head %}
+<style>
+    .card-body {
+        padding: 2rem 1.5rem;
+    }
+    .card-title {
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+    }
+    .weather-line {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .center-wrapper {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem; /* Safe spacing on mobile */
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 576px) {
+        .card {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="center-wrapper">
+  <div class="card shadow-lg" style="width: 22rem; max-width: 100%;">
+    <div class="card-body text-center">
+      <h4 class="card-title">🌤 Weather Report</h4>
+      <p class="weather-line"><strong>Status:</strong> {{ weather_info.status }}</p>
+      <p class="weather-line"><strong>Temperature:</strong> {{ weather_info.temperature }} °C</p>
+      <p class="weather-line"><strong>Wind Speed:</strong> {{ weather_info.wind }} m/s</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

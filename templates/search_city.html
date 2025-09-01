@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}
+  Hello
+{% endblock %}
+
+{% block body %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+  <form action="{{ url_for('show_city_info') }}" method="post" class="w-100" style="max-width: 350px;">
+    
+    <h2 class="text-center mb-4">Search City Info</h2>
+    
+    <div class="mb-4">
+      <input type="text" class="form-control form-control-lg" id="city" name="city"
+             placeholder="Enter city"
+             value="{{ request.form.get('city', '') }}"
+             list="city-list"
+             required>
+      <datalist id="city-list">
+        {% for city in cities %}
+          <option value="{{ city}}">
+        {% endfor %}
+      </datalist>
+      
+    </div>
+    
+    <div class="d-flex justify-content-center ">
+        <button type="submit" class="btn btn-primary py-0 rounded-1">Search</button>
+    </div>
+    
+  </form>
+</div>
+{% endblock %}
