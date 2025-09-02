@@ -28,56 +28,6 @@ Session(app)
 API_KEY = os.getenv('OpenWeather_API_KEY')
 
 
-@app.route("/", methods=["GET"])
-@login_required
-def index():
-    return redirect(url_for("search_city"))
-
-
-@app.route("/search_city", methods=["GET","POST"])
-def search_city():
-    if request.method == "POST":
-        city: str | None = request.form.get("city")
-        if city:
-            return redirect(url_for("show_city_info", city=city))
-        else: #TODO: change later 
-            return 'Please enter a city name', 400
-            
-    else:
-        
-        id = session['user_id']
-        rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", id) or []
-        country_code: str = rows[0]["country_code"]
-        cities: list[str] = get_cities(country_code)
-
-        return render_template('/search_city.html', cities=cities)
-
-@app.route("/show_city_info", methods=["GET", "POST"])
-@login_required
-def show_city_info():
-    if request.method == 'POST':
-        id = session['user_id']
-        city = request.form.get("city")
-        if not city:
-            return 'error', 400
-
-        rows: list[dict]= SQL("SELECT country_code FROM users WHERE id = ?", id)
-        country_code = rows[0]['country_code'] 
-
-        base_url = "https://api.openweathermap.org/data/2.5/weather"
-        query = f"{city},{country_code}"
-        unit = "metric"
-
-        url = f"{base_url}?q={query}&appid={API_KEY}&units={unit}"
-        response= requests.get(url)
-        data: dict = response.json()
-        weather_info = {'status':data['weather'][0]['description'], 'temperature' : data['main']['temp'], 'wind' : data['wind']['speed']} 
-        return render_template("show_city_info.html", weather_info=weather_info)
-    else:
-        return render_template(url_for('show_city_info'))
-
-
-
 # AUTH
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -128,7 +78,6 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
 
-    # session.clear()
     
     if request.method == "POST":
 
@@ -165,11 +114,69 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
+    flash('Logged out!', 'danger') 
     return redirect(url_for("login"))
 
 
+@app.route("/", methods=["GET"])
+@login_required
+def index():
+    return redirect(url_for("search_city"))
 
 
+@app.route("/search_city", methods=["GET","POST"])
+def search_city():
+    if request.method == "POST":
+        city: str | None = request.form.get("city")
+        if city:
+            return redirect(url_for("show_city_info", city=city))
+        else: #TODO: change later 
+            return 'Please enter a city name', 400
+            
+    else:
+        
+        id = session['user_id']
+        rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", id) or []
+        country_code: str = rows[0]["country_code"]
+        cities: list[str] = get_cities(country_code)
+
+        return render_template('/search_city.html', cities=cities)
+
+@app.route("/show_city_info", methods=["GET", "POST"])
+@login_required
+def show_city_info():
+    if request.method == 'POST':
+        id = session['user_id']
+        city = request.form.get("city")
+        if not city:
+            return 'error', 400
+
+        rows: list[dict]= SQL("SELECT country_code FROM users WHERE id = ?", id)
+        country_code = rows[0]['country_code'] 
+
+        base_url = "https://api.openweathermap.org/data/2.5/weather"
+        query = f"{city},{country_code}"
+        unit = "metric"
+
+        url = f"{base_url}?q={query}&appid={API_KEY}&units={unit}"
+        response= requests.get(url)
+        data: dict = response.json()
+        weather_info: dict = {'status':data['weather'][0]['description'], 'temperature' : data['main']['temp'], 'wind' : data['wind']['speed']} 
+        return render_template("show_city_info.html", weather_info=weather_info)
+    else:
+        return render_template(url_for('show_city_info'))
+
+
+@app.route("/add_city_info", methods=["POST"])
+@login_required
+def add_city_info(weather_info):
+    country_code = SQL("SELECT country_code FROM users WHERE id = ?",session['user_id'])
+
+    SQL(
+        "INSERT INTO weather_data(country_code, status, temperature, windspeed, timestamp) VALUES (?, ?, ?, ?)"
+        ,country_code, weather_info['status'], weather_info['temperature', weather_info['wind']]
+        )
+    flash('city added', 'success') 
 
 
 if __name__ == '__main__':
@@ -182,6 +189,19 @@ if __name__ == '__main__':
         password_hash VARCHAR(255) NOT NULL,
         country_code VARCHAR(20) NULL
      );
+    '''
+    )
+
+    SQL(
+    '''
+    CREATE TABLE weather_data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        country_code TEXT NOT NULL,
+        status TEXT NOT NULL,
+        temperature REAL NOT NULL,
+        windspeed REAL NOT NULL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
     '''
     )
 
