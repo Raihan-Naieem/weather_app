@@ -1,5 +1,5 @@
 
-# Weather App
+# Weather App (work in progress)
 
 A simple weather dashboard built with **Flask** and the **OpenWeather API**.  
 It displays real-time weather information based on city input.
