@@ -34,23 +34,26 @@ def register():
     if request.method == "POST":
 
         email = request.form.get("email")
-        password = request.form.get("password")
+        password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password")
 
-        country_code = request.form.get("country_code").upper()
+        country_code = request.form.get("country_code")
+        if not country_code:
+            return "country code not found", 404
         country_codes: list[str] = get_country_codes()
 
-        if country_code not in country_codes:
+        if country_code.upper() not in country_codes:
             flash("Invalid country code!", "danger")
             return render_template("register.html", navbar=False, country_codes= country_codes)
+        
 
 
         # confirms password
         if not password == confirm_password:
             flash("Password Mismatch", "danger")
             return render_template("register.html", navbar=False, country_codes= country_codes)
-            
-        password_hash = generate_password_hash(password) 
+        
+        password_hash = generate_password_hash(password)
 
         # error if sql aint sqling
         try:
@@ -120,23 +123,27 @@ def logout():
 @app.route("/", methods=["GET"])
 @login_required
 def index():
+    # TODO: 
+    # will show country code and a option to change them
+    # will show added city with pagination and can delete
+    # some basic data manipulation (ex highest temp, avg temp etc)
     return redirect(url_for("search_city_info"))
 
 
 @app.route("/search_city_info", methods=["GET","POST"])
 def search_city_info():
     if request.method == "POST":
-        city: str | None = request.form.get("city")
-        if city:
-            return redirect(url_for("show_city_info", city=city))
-        else: #TODO: change later 
-            return 'Please enter a city name', 400
+        city: str = request.form.get("city", "")
+        if not city:
+            flash("Enter a valid city name!", "danger")
+            return redirect("search_city_info")
+        return redirect(url_for("show_city_info", city=city))
             
     elif request.method == "GET":       
         id = session['user_id']
         rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", id) or []
         country_code: str = rows[0]["country_code"]
-        cities: list[str] = get_cities(country_code)
+        cities = get_cities(country_code)
 
         return render_template('/search_city_info.html', cities=cities)
 
@@ -147,7 +154,7 @@ def show_city_info():
     if not city:
         return 'nice try! dont manually insert city in the url', 400
 
-    rows: list[dict]= SQL("SELECT country_code FROM users WHERE id = ?", session['user_id'])
+    rows: list[dict]= SQL("SELECT country_code FROM users WHERE id = ?", session['user_id']) or []
     country_code = rows[0]['country_code'] 
 
     base_url = "https://api.openweathermap.org/data/2.5/weather"
@@ -157,6 +164,11 @@ def show_city_info():
     url = f"{base_url}?q={query}&appid={API_KEY}&units={unit}"
     response= requests.get(url)
     data: dict = response.json()
+
+    if data.get("cod") != 200:
+        flash(f"{data.get("message", "Unknown error")}", "danger")
+        return redirect(url_for("search_city_info"))
+
     weather_info: dict = {'status':data['weather'][0]['description'], 'temperature' : float(data['main']['temp']), 'wind' : float(data['wind']['speed'])}
     session['weather_info'] = weather_info
     session['last_city'] = city
@@ -167,9 +179,9 @@ def show_city_info():
 @app.route("/add_city_info", methods=["POST"])
 @login_required
 def add_city_info():
-    weather_info: dict = session.get('weather_info')
+    weather_info: dict = session.get('weather_info', "")
 
-    rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?",session['user_id'])
+    rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?",session['user_id']) or []
     country_code = rows[0]['country_code']
 
     SQL(
@@ -201,7 +213,7 @@ if __name__ == '__main__':
     # add user id foreign key
     SQL(
     '''
-    CREATE TABLE IF NOT EXISTS weather_info (
+    CREATE TABLE IF NOT EXISTS weather_data (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         country_code TEXT NOT NULL,
