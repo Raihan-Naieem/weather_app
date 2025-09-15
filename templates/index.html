@@ -1,1 +1,47 @@
 <!-- WORK IN PROGRESS -->
+
+{% extends "base.html" %}
+{% block title %}
+Home
+{% endblock %}
+
+{% block body %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+	<div class="container mb-4">
+		<p> current country code: {{current_country_code}}
+		<form class="d-flex align-items-center gap-2" action="update_country_code" method="post">
+			<input type="text" class="form-control" name="country_code" placeholder="Change country code" list="country-codes">
+			<datalist id="country-codes">
+			{% for code in available_codes %}
+				<option value="{{ code }}"></option>
+			{% endfor %}
+			</datalist>
+			<button type="submit" class="btn btn-primary" >Update</button>
+		</form>
+
+
+		<table class="table table-striped table-bordered table-hover text-center">
+		 <thead>
+			<tr>
+			{% for k in weather_data_set[0].keys() %}
+				<th>{{ k }}</th>
+			{% endfor %}
+			</tr>
+		  </thead>
+			<tbody>
+			  {% for weather_data in weather_data_set %}
+				<tr>
+				{% for v in weather_data.values() %}
+					<td>{{ v }}</td>
+				{% endfor %}
+				</tr>
+			  {% endfor %}
+			</tbody>
+
+		</table>
+	</div>
+
+
+
+</div>
+{% endblock %}

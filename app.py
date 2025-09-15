@@ -1,5 +1,6 @@
 
 from typing import Any
+from collections import defaultdict
 import requests
 from flask import  Flask, request, redirect, render_template, session, url_for, flash 
 from flask_session import Session
@@ -45,9 +46,6 @@ def register():
         if country_code.upper() not in country_codes:
             flash("Invalid country code!", "danger")
             return render_template("register.html", navbar=False, country_codes= country_codes)
-        
-
-
         # confirms password
         if not password == confirm_password:
             flash("Password Mismatch", "danger")
@@ -72,7 +70,7 @@ def register():
         flash('Registered successfully!', 'success')
         return redirect(url_for("login"))
     
-    else:
+    elif request.method == "GET":
         # to give user a drop down box of country codes to select from
         country_codes = get_country_codes()
         return render_template("register.html", navbar=False, country_codes= country_codes)
@@ -108,11 +106,11 @@ def login():
         session['email'] = rows[0]['email']
         flash("Logged in succesefully!", "success")
         return redirect(url_for("index"))
-    else:
+    elif request.method == "GET":
         return render_template("login.html",navbar=False)
 
 
-@app.route("/logout")
+@app.route("/logout", methods=["GET"])
 def logout():
 
     session.clear()
@@ -120,15 +118,58 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
     # TODO: 
     # will show country code and a option to change them
     # will show added city with pagination and can delete
     # some basic data manipulation (ex highest temp, avg temp etc)
-    return redirect(url_for("search_city_info"))
 
+    if request.method == "GET":
+        weather_data_set: list[dict] = SQL('''
+            SELECT
+                country_code AS "Country", 
+                city AS "City",
+                status As "Weather Status", 
+                temperature AS "Temperature(°C)", 
+                windspeed AS "Windspeed (m/s)", 
+                timestamp 
+            FROM weather_data 
+            WHERE user_id = ?
+            ''', session["user_id"]) or []
+        if not weather_data_set:
+            return redirect(url_for('search_city_info'))
+
+        rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", session["user_id"]) or []
+        current_country_code = rows[0]["country_code"].upper()
+
+        return render_template("index.html", weather_data_set=weather_data_set, current_country_code=current_country_code ,available_codes=get_country_codes())
+
+@app.route("/update_country_code", methods=["POST"])
+def update_country_code():
+    update_code = request.form.get("country_code", "").strip().upper()
+    available_codes = get_country_codes()
+
+    if not update_code:
+        flash("Country code cannot be empty!", "danger")
+        return redirect(url_for("index"))
+
+    if update_code not in available_codes:
+        flash("Invalid updated country code!", "danger")
+        return redirect(url_for("index"))
+
+    SQL('''
+        UPDATE users 
+        SET country_code = ? 
+        WHERE id = ?
+        ''', update_code, session["user_id"])
+    flash("Country code updated!", "success")
+    return redirect(url_for("index"))
+
+
+
+    
 
 @app.route("/search_city_info", methods=["GET","POST"])
 def search_city_info():
@@ -169,7 +210,11 @@ def show_city_info():
         flash(f"{data.get("message", "Unknown error")}", "danger")
         return redirect(url_for("search_city_info"))
 
-    weather_info: dict = {'status':data['weather'][0]['description'], 'temperature' : float(data['main']['temp']), 'wind' : float(data['wind']['speed'])}
+    weather_info: dict = {
+        'status':data['weather'][0]['description'], 
+        'temperature' : float(data['main']['temp']),
+        'wind' : float(data['wind']['speed'])
+    }
     session['weather_info'] = weather_info
     session['last_city'] = city
     return render_template("show_city_info.html", weather_info=weather_info)
@@ -182,7 +227,7 @@ def add_city_info():
     weather_info: dict = session.get('weather_info', "")
 
     rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?",session['user_id']) or []
-    country_code = rows[0]['country_code']
+    country_code = rows[0]['country_code'].upper()
 
     SQL(
         "INSERT INTO weather_data(user_id, country_code, city, status, temperature, windspeed) VALUES (?, ?, ?, ?, ?, ?)",
@@ -195,8 +240,7 @@ def add_city_info():
     )
     flash('city added', 'success')
     session.pop('weather_info', None)
-    return redirect(url_for('show_city_info', city=session['last_city']))
-
+    return redirect(url_for("index"))
 if __name__ == '__main__':
 
     SQL(
