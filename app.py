@@ -129,22 +129,39 @@ def index():
     if request.method == "GET":
         weather_data_set: list[dict] = SQL('''
             SELECT
-                country_code AS "Country", 
-                city AS "City",
-                status As "Weather Status", 
-                temperature AS "Temperature(°C)", 
-                windspeed AS "Windspeed (m/s)", 
+                id,
+                country_code, 
+                city,
+                status, 
+                temperature, 
+                windspeed, 
                 timestamp 
             FROM weather_data 
             WHERE user_id = ?
             ''', session["user_id"]) or []
         if not weather_data_set:
+            flash("No weather data found! Please search and add a city first.", "warning")
             return redirect(url_for('search_city_info'))
 
         rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", session["user_id"]) or []
         current_country_code = rows[0]["country_code"].upper()
 
+
         return render_template("index.html", weather_data_set=weather_data_set, current_country_code=current_country_code ,available_codes=get_country_codes())
+
+@app.route("/delete_row", methods=["POST"])
+def delete_row():
+    id = request.args.get('id', type=int)
+    if not id:
+        flash("Deletion error!")
+        return redirect(url_for("index"))
+    SQL('''
+        DELETE FROM weather_data 
+        WHERE id = ? AND 
+        user_id = ?
+        ''', id, session["user_id"])
+    return redirect(url_for("index"))
+
 
 @app.route("/update_country_code", methods=["POST"])
 def update_country_code():
@@ -270,5 +287,4 @@ if __name__ == '__main__':
     );
     '''
     )
-
     app.run(host='0.0.0.0', port=5000, debug=True)
