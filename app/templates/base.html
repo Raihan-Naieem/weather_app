@@ -30,11 +30,11 @@
       <div class="container-fluid">
         <!-- Home link left -->
         <a class="navbar-brand d-inline-block hover-scale" 
-           href="{{ url_for('index') }}">
+           href="{{ url_for('dashboard.index') }}">
           ☁️ Home
         </a>
         <a class="navbar-brand d-inline-block hover-scale" 
-           href="{{ url_for('search_city_info') }}">
+           href="{{ url_for('weather.search_city_info') }}">
            Search City
         </a>
         <!-- Navbar toggle for small screens -->
@@ -49,7 +49,7 @@
           <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link d-inline-block hover-scale" 
-                 href="{{ url_for('logout') }}">
+                 href="{{ url_for('auth.logout') }}">
                  Logout
               </a>
             </li>

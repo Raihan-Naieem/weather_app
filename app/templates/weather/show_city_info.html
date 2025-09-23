@@ -46,7 +46,7 @@ Weather Report
       <p class="weather-line"><strong>Wind Speed:</strong> {{ weather_info.wind }} m/s</p>
 
       <!-- POST form for adding city -->
-      <form action="{{ url_for('add_city_info') }}" method="post">
+      <form action="{{ url_for('weather.add_city_info') }}" method="post">
         <button type="submit" class="btn btn-primary mt-3">Add City</button>
       </form>
 

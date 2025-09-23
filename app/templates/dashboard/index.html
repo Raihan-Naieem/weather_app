@@ -13,7 +13,7 @@ Home
 
     <!-- Country Code Update -->
     <form class="d-flex align-items-center gap-2 mb-4"
-          action="{{ url_for('update_country_code') }}"
+          action="{{ url_for('dashboard.update_country_code') }}"
           method="post">
       <input type="text"
              class="form-control"
@@ -52,7 +52,7 @@ Home
             <td>{{ weather_data.windspeed }}</td>
             <td>{{ weather_data.timestamp }}</td>
             <td>
-              <form action="{{ url_for('delete_row', id=weather_data.id) }}"
+              <form action="{{ url_for('dashboard.delete_row', id=weather_data.id) }}"
                     method="post"
                     class="d-inline">
                 <button type="submit" class="btn btn-outline-danger btn-sm">

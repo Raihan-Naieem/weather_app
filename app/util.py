@@ -9,7 +9,7 @@ import json
 
 # by doing this outside server will read the json only one...
 # else it had to read everytime get_cities() is called
-with open('static/city.list.json', 'r', encoding='utf-8') as file:
+with open('app/static/city.list.json', 'r', encoding='utf-8') as file:
     cities = json.load(file)
 def get_cities(country_code: str) -> list[str]:
     '''
@@ -21,7 +21,7 @@ def get_cities(country_code: str) -> list[str]:
 
 
 def get_country_codes() -> list[str]:
-    with open('static/country.txt', 'r') as file:
+    with open('app/static/country.txt', 'r') as file:
         country_codes: list[str] = file.read().strip().split(', ')
         return country_codes
 
@@ -34,7 +34,7 @@ def login_required(function):
         if 'user_id' in session:
             return function(*args, **kwargs)
         
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
     
     return wrapper
 
