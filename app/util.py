@@ -3,7 +3,7 @@ from functools import wraps
 from typing import  Any
 import sqlite3
 
-from flask import redirect, url_for, session
+from flask import redirect, url_for, session, flash
 
 import json
 
@@ -33,7 +33,7 @@ def login_required(function):
         
         if 'user_id' in session:
             return function(*args, **kwargs)
-        
+        flash("Log in first!", "warning")
         return redirect(url_for("auth.login"))
     
     return wrapper

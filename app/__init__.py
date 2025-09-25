@@ -2,6 +2,8 @@ from flask import Flask
 from flask_session import Session
 
 
+
+from .errors import errors
 from .auth.routes import auth
 from .dashboard.routes import dashboard
 from .weather.routes import weather
@@ -13,6 +15,7 @@ def create_app():
 
     Session(app)
 
+    app.register_blueprint(errors)
     app.register_blueprint(auth)
     app.register_blueprint(dashboard)
     app.register_blueprint(weather)
