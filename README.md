@@ -2,7 +2,6 @@
 # Weather App (work in progress)
 
 A simple weather dashboard built with **Flask** and the **OpenWeather API**.  
-It displays real-time weather information based on city input.
 
 ---
 
@@ -13,51 +12,39 @@ It displays real-time weather information based on city input.
 git clone https://github.com/Raihan-Naieem/weather_app.git
 cd weather_app
 ```
-
-
-### 2. Create and Activate a Virtual Environment
-
-##### On **Linux/macOS**:
-
-``` bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-##### On **Windows (PowerShell)**:
-
-```bash
-python -m venv venv
-.\venv\Scripts\activate
-```
-
-### 3. Create ***.env*** File
-
-##### Create a ***.env*** file in the project root:
+##### 2. Create a ***.env*** file in the project root:
 
 ```bash
 touch .env
 ```
 
-##### Add your keys inside:
+##### Add your keys inside .env:
 
-```python
+```bash
 SECRET_KEY = 'your secret key'
 OpenWeather_API_KEY = 'your open weather api key'
 ```
 
 
 
-### 4. Install Dependencies
-
+### 3. Build and Start with Docker Compose (you must have docker and docker-compose installed first)
+``` bash
+docker compose up --build
+```
+### OR run in background
 ```bash
-pip install -r requirements.txt
+docker compose up -d
 ```
 
-### 5. Run the Application
+### 4. Access the App
 
-```bash
-python app.py
+Open your browser and go to:  
+[http://localhost](http://localhost)
+
+### 5. To fully close docker container
+``` bash
+docker compose down -v
 ```
+
 
 
