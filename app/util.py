@@ -33,7 +33,7 @@ def get_cities(country_code: str) -> list[str]:
 
 def get_country_dict() -> dict[str, str]:
     """
-    Returns a dict: Keys -> Full country name, values -> ISO country codes
+    Returns a dict: Keys -> ISO country code, values -> Full country name
     """
     return country_list
 
