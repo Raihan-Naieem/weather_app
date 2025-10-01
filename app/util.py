@@ -1,3 +1,4 @@
+from collections import defaultdict
 from functools import wraps
 
 from typing import  Any
@@ -8,22 +9,33 @@ from flask import redirect, url_for, session, flash
 import json
 
 # by doing this outside server will read the json only one...
-# else it had to read everytime get_cities() is called
-with open('app/static/city.list.json', 'r', encoding='utf-8') as file:
-    cities = json.load(file)
-def get_cities(country_code: str) -> list[str]:
-    '''
-        filters cities according to country code from a static json file
-    '''
-    filtered_cities: list[str] = [city['name'] for city in cities if city['country'] == country_code]
 
+with open('app/static/city_list.json', 'r', encoding='utf-8') as file:
+    cities: list[dict] = json.load(file)
+
+with open('app/static/country_list.json', 'r', encoding='utf-8') as file:
+    country_list: dict[str,str] = json.load(file)
+
+
+# default value is a empty list
+country_city_dict = defaultdict(list)
+for city in cities:
+    # appending city to a key of country_code which value is an empty list
+    country_city_dict[city["country"]].append(city["name"]) 
+
+def get_cities(country_code: str) -> list[str]:
+    """
+        returns filters cities according to country code
+    """
+    filtered_cities: list[str] = country_city_dict[country_code]
     return filtered_cities
 
 
-def get_country_codes() -> list[str]:
-    with open('app/static/country.txt', 'r') as file:
-        country_codes: list[str] = file.read().strip().split(', ')
-        return country_codes
+def get_country_dict() -> dict[str, str]:
+    """
+    Returns a dict: Keys -> Full country name, values -> ISO country codes
+    """
+    return country_list
 
 
 
