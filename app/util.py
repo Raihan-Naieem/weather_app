@@ -30,13 +30,16 @@ def get_cities(country_code: str) -> list[str]:
     filtered_cities: list[str] = country_city_dict[country_code]
     return filtered_cities
 
-def get_country_codes():
-    return list(country_list.keys())
+def get_country_codes() -> list[str]:
+    """
+    returns a list of country codes
+    """
+    return list(country_list.values())
 
 
 def get_country_dict() -> dict[str, str]:
     """
-    Returns a dict: Keys -> ISO country code, values -> Full country name
+    Returns a dict: Keys -> country name, values -> Full ISO country code
     """
     return country_list
 
