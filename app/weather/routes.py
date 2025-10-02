@@ -21,6 +21,7 @@ def search_city_info():
         rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", id) or []
         country_code: str = rows[0]["country_code"]
         cities = get_cities(country_code)
+        print("fuck")
 
         return render_template('weather/search_city_info.html', cities=cities)
 
@@ -63,7 +64,7 @@ def add_city_info():
     weather_info: dict = session.get('weather_info', "")
 
     rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?",session['user_id']) or []
-    country_code = rows[0]['country_code'].upper()
+    country_code = rows[0]['country_code']
 
     SQL(
         "INSERT INTO weather_data(user_id, country_code, city, status, temperature, windspeed) VALUES (?, ?, ?, ?, ?, ?)",

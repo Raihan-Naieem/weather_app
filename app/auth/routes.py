@@ -1,7 +1,7 @@
 from typing import Any
 from flask import render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from ..util import SQL, get_country_codes, login_required
+from ..util import SQL,  get_country_dict, login_required
 from flask import Blueprint
 auth = Blueprint("auth", __name__)
 
@@ -14,12 +14,14 @@ def register():
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password")
         country_code = request.form.get("country_code")
-        country_codes: list[str] = get_country_codes()
+        country_codes: list[str] = list(get_country_dict().keys())
 
         if not country_code:
             return "country code not found", 404 #FIX: fix this shit
 
-        if country_code.upper() not in country_codes:
+        country_code = country_code.capitalize()
+
+        if country_code not in country_codes:
             flash("Invalid country code!", "danger")
             return render_template("auth/register.html", navbar=False, country_codes=country_codes)
 
@@ -50,9 +52,9 @@ def register():
         flash("Registered successfully!", "success")
         return redirect(url_for("auth.login"))
 
-    elif request.method == "GET":
+    elif request.method == "GET": 
         # to give user a drop down box of country codes to select from
-        country_codes = get_country_codes()
+        country_codes = list(get_country_dict().keys())
         return render_template("auth/register.html", navbar=False, country_codes=country_codes)
 
 

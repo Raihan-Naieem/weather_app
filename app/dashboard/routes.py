@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, flash, session
-from ..util import SQL, login_required, get_country_codes
+from ..util import SQL, get_country_dict, login_required
 from flask import Blueprint
 dashboard = Blueprint("dashboard", __name__)
 
@@ -32,18 +32,19 @@ def index():
             return redirect(url_for('weather.search_city_info'))
 
         rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", session["user_id"]) or []
-        current_country_code = rows[0]["country_code"].upper()
+        current_country_code: str = rows[0]["country_code"].capitalize()
+        
 
 
         return render_template("dashboard/index.html", 
                                weather_data_set=weather_data_set, 
                                current_country_code=current_country_code
-                               ,available_codes=get_country_codes())
+                               ,available_codes=list(get_country_dict().keys()))
 
 @dashboard.route("/update_country_code", methods=["POST"])
 def update_country_code():
-    update_code = request.form.get("country_code", "").strip().upper()
-    available_codes = get_country_codes()
+    update_code = request.form.get("country_code", "").strip().capitalize()
+    available_codes = list(get_country_dict().keys())
 
     if not update_code:
         flash("Country code cannot be empty!", "danger")
