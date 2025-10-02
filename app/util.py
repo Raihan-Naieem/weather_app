@@ -30,6 +30,9 @@ def get_cities(country_code: str) -> list[str]:
     filtered_cities: list[str] = country_city_dict[country_code]
     return filtered_cities
 
+def get_country_codes():
+    return list(country_list.keys())
+
 
 def get_country_dict() -> dict[str, str]:
     """

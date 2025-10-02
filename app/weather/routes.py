@@ -13,7 +13,7 @@ def search_city_info():
         city: str = request.form.get("city", "")
         if not city:
             flash("Enter a valid city name!", "danger")
-            return redirect("search_city_info")
+            return redirect(url_for("weather.search_city_info"))
         return redirect(url_for("weather.show_city_info", city=city))
             
     elif request.method == "GET":       
