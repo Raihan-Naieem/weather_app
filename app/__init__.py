@@ -28,7 +28,7 @@ def create_app():
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
             email VARCHAR(50) NOT NULL UNIQUE, 
             password_hash VARCHAR(255) NOT NULL,
-            country_code VARCHAR(20) NULL
+            country_name VARCHAR(20) NULL
          );
         '''
         )
@@ -39,7 +39,7 @@ def create_app():
         CREATE TABLE IF NOT EXISTS weather_data (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
-            country_code TEXT NOT NULL,
+            country_name TEXT NOT NULL,
             city TEXT NOT NULL,
             status TEXT NOT NULL,
             temperature REAL NOT NULL,

@@ -60,14 +60,14 @@
           <div class="form-input-spacing">
             <input 
 							class="form-control form-control-lg text-center" 
-							list="country_code_list" name="country_code" 
-							id="country_code" placeholder="Enter your country code"
-            	value="{{ request.form.get('country_code', '') }}"
+							list="country_name_list" name="country_name" 
+							id="country_name" placeholder="Enter your country name"
+            	value="{{ request.form.get('country_name', '') }}"
 							autocomplete="off"
              	required>
-            <datalist id="country_code_list">
-              {% for country_code in country_codes %}
-                <option value="{{ country_code }}"></option>
+            <datalist id="country_name_list">
+              {% for country_name in country_names %}
+                <option value="{{ country_name }}"></option>
               {% endfor %}
             </datalist>
           </div>

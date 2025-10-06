@@ -13,31 +13,31 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password", "")
         confirm_password = request.form.get("confirm_password")
-        country_code = request.form.get("country_code")
-        country_codes: list[str] = list(get_country_dict().keys())
+        country_name = request.form.get("country_name")
+        country_names: list[str] = list(get_country_dict().keys())
 
-        if not country_code:
-            return "country code not found", 404 #FIX: fix this shit
+        if not country_name:
+            return "country name not found", 404 #FIX: fix this shit
 
-        country_code = country_code.capitalize()
+        country_name = country_name.capitalize()
 
-        if country_code not in country_codes:
-            flash("Invalid country code!", "danger")
-            return render_template("auth/register.html", navbar=False, country_codes=country_codes)
+        if country_name not in country_names:
+            flash("Invalid country name!", "danger")
+            return render_template("auth/register.html", navbar=False, country_name=country_name)
 
         if password != confirm_password:
             flash("Password Mismatch", "danger")
-            return render_template("auth/register.html", navbar=False, country_codes=country_codes)
+            return render_template("auth/register.html", navbar=False, country_name=country_name)
 
         password_hash = generate_password_hash(password)
 
         # error if sql aint sqling
         try:
             SQL(
-                "INSERT INTO users (email, password_hash, country_code) VALUES (?, ?, ?)",
+                "INSERT INTO users (email, password_hash, country_name) VALUES (?, ?, ?)",
                 email,
                 password_hash,
-                country_code,
+                country_name,
             )
         except ValueError as error:
             flash(str(error), "danger")
@@ -53,9 +53,9 @@ def register():
         return redirect(url_for("auth.login"))
 
     elif request.method == "GET": 
-        # to give user a drop down box of country codes to select from
-        country_codes = list(get_country_dict().keys())
-        return render_template("auth/register.html", navbar=False, country_codes=country_codes)
+        # to give user a drop down box of country names to select from
+        country_names = list(get_country_dict().keys())
+        return render_template("auth/register.html", navbar=False, country_names=country_names)
 
 
 @auth.route("/login", methods=["GET", "POST"])

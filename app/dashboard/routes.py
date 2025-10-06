@@ -17,7 +17,7 @@ def index():
         weather_data_set: list[dict] = SQL('''
             SELECT
                 id,
-                country_code, 
+                country_name, 
                 city,
                 status, 
                 temperature, 
@@ -26,39 +26,36 @@ def index():
             FROM weather_data 
             WHERE user_id = ?
             ''', session["user_id"]) or []
-        # if not weather_data_set:
-            # flash("No weather data found! Please search and add a city first.", "warning")
-            # return redirect(url_for('weather.search_city_info'))
 
-        rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", session["user_id"]) or []
-        current_country_code: str = rows[0]["country_code"].capitalize()
+        rows: list[dict] = SQL("SELECT country_name FROM users WHERE id = ?", session["user_id"]) or []
+        current_country_name: str = rows[0]["country_name"].capitalize()
         
 
 
         return render_template("dashboard/index.html", 
                                weather_data_set=weather_data_set, 
-                               current_country_code=current_country_code
-                               ,available_codes=list(get_country_dict().keys()))
+                               current_country_name=current_country_name
+                               ,available_names=list(get_country_dict().keys()))
 
-@dashboard.route("/update_country_code", methods=["POST"])
-def update_country_code():
-    update_code = request.form.get("country_code", "").strip().capitalize()
-    available_codes = list(get_country_dict().keys())
+@dashboard.route("/update_country_name", methods=["POST"])
+def update_country_name():
+    update_name = request.form.get("country_name", "").strip().capitalize()
+    available_names = list(get_country_dict().keys())
 
-    if not update_code:
-        flash("Country code cannot be empty!", "danger")
+    if not update_name:
+        flash("Country name cannot be empty!", "danger")
         return redirect(url_for("dashboard.index"))
 
-    if update_code not in available_codes:
-        flash("Invalid updated country code!", "danger")
+    if update_name not in available_names:
+        flash("Invalid updated country name!", "danger")
         return redirect(url_for("dashboard.index"))
 
     SQL('''
         UPDATE users 
-        SET country_code = ? 
+        SET country_name = ? 
         WHERE id = ?
-        ''', update_code, session["user_id"])
-    flash("Country code updated!", "success")
+        ''', update_name, session["user_id"])
+    flash("Country name updated!", "success")
     return redirect(url_for("dashboard.index"))
 
 @dashboard.route("/delete_row", methods=["POST"])

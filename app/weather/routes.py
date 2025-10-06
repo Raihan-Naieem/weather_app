@@ -18,10 +18,10 @@ def search_city_info():
             
     elif request.method == "GET":       
         id = session['user_id']
-        rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", id) or []
-        country_name: str = rows[0]["country_code"]
-        country_code = get_country_dict()[country_name]
-        cities = get_cities(country_code)
+        rows: list[dict] = SQL("SELECT country_name FROM users WHERE id = ?", id) or []
+        country_name: str = rows[0]["country_name"]
+        country_name = get_country_dict()[country_name]
+        cities = get_cities(country_name)
 
         return render_template('weather/search_city_info.html', cities=cities)
 
@@ -32,8 +32,8 @@ def show_city_info():
     if not city:
         return 'nice try! dont manually insert city in the url', 400
 
-    rows: list[dict]= SQL("SELECT country_code FROM users WHERE id = ?", session['user_id']) or []
-    country_name = rows[0]['country_code']
+    rows: list[dict]= SQL("SELECT country_name FROM users WHERE id = ?", session['user_id']) or []
+    country_name = rows[0]['country_name']
     country_code = get_country_dict()[country_name]
 
     base_url = "https://api.openweathermap.org/data/2.5/weather"
@@ -64,13 +64,13 @@ def show_city_info():
 def add_city_info():
     weather_info: dict = session.get('weather_info', "")
 
-    rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?",session['user_id']) or []
-    country_code = rows[0]['country_code']
+    rows: list[dict] = SQL("SELECT country_name FROM users WHERE id = ?",session['user_id']) or []
+    country_name = rows[0]['country_name']
 
     SQL(
-        "INSERT INTO weather_data(user_id, country_code, city, status, temperature, windspeed) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO weather_data(user_id, country_name, city, status, temperature, windspeed) VALUES (?, ?, ?, ?, ?, ?)",
         session['user_id'],
-        country_code,
+        country_name,
         session['last_city'],
         weather_info['status'],
         weather_info['temperature'],
