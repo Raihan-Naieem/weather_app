@@ -1,6 +1,6 @@
 from flask import current_app, render_template, redirect, url_for, session, flash, request
 import requests
-from ..util import SQL, get_cities, login_required
+from ..util import SQL, login_required, get_country_dict, get_cities
 from flask import Blueprint
 weather = Blueprint("weather", __name__)
 
@@ -19,9 +19,9 @@ def search_city_info():
     elif request.method == "GET":       
         id = session['user_id']
         rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", id) or []
-        country_code: str = rows[0]["country_code"]
+        country_name: str = rows[0]["country_code"]
+        country_code = get_country_dict()[country_name]
         cities = get_cities(country_code)
-        print("fuck")
 
         return render_template('weather/search_city_info.html', cities=cities)
 
@@ -33,7 +33,8 @@ def show_city_info():
         return 'nice try! dont manually insert city in the url', 400
 
     rows: list[dict]= SQL("SELECT country_code FROM users WHERE id = ?", session['user_id']) or []
-    country_code = rows[0]['country_code'] 
+    country_name = rows[0]['country_code']
+    country_code = get_country_dict()[country_name]
 
     base_url = "https://api.openweathermap.org/data/2.5/weather"
     query = f"{city},{country_code}"

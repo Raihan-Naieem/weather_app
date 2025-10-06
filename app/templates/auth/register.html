@@ -48,14 +48,23 @@
         <form action="/register" method="post">
     
           <div class="form-input-spacing">
-            <input type="email" class="form-control form-control-lg text-center" id="email" name="email"
+            <input 
+							type="email" 
+							class="form-control 
+							form-control-lg text-center" 
+							id="email" 
+							name="email"
             value=" {{ request.form.get('email', '') }}" placeholder="Enter email" required>
           </div>
 
           <div class="form-input-spacing">
-            <input class="form-control form-control-lg text-center" list="country_code_list" name="country_code" id="country_code" placeholder="Enter your country code"
-            value="{{ request.form.get('country_code', '') }}"
-             required>
+            <input 
+							class="form-control form-control-lg text-center" 
+							list="country_code_list" name="country_code" 
+							id="country_code" placeholder="Enter your country code"
+            	value="{{ request.form.get('country_code', '') }}"
+							autocomplete="off"
+             	required>
             <datalist id="country_code_list">
               {% for country_code in country_codes %}
                 <option value="{{ country_code }}"></option>
@@ -64,11 +73,21 @@
           </div>
           
           <div class="form-input-spacing">
-            <input type="password" class="form-control form-control-lg text-center" id="password" name="password" placeholder="Enter password" required>
+            <input 
+							type="password" 
+							class="form-control form-control-lg text-center" 
+							id="password" name="password" 
+							placeholder="Enter password" 
+							required>
           </div>
 
           <div class="form-input-spacing">
-            <input type="password" class="form-control form-control-lg text-center" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+            <input 
+							type="password" 
+							class="form-control form-control-lg text-center" 
+							id="confirm_password" name="confirm_password" 
+							placeholder="Confirm password" 
+							required>
           </div>
           
           <div class="d-grid mt-4">

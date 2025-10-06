@@ -39,7 +39,7 @@ def get_country_codes() -> list[str]:
 
 def get_country_dict() -> dict[str, str]:
     """
-    Returns a dict: Keys -> country name, values -> Full ISO country code
+    Returns a dict: Keys -> country name, values -> ISO country code
     """
     return country_list
 

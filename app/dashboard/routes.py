@@ -10,7 +10,6 @@ dashboard = Blueprint("dashboard", __name__)
 @login_required
 def index():
     # TODO: 
-    # will show country code and a option to change them
     # will show added city with pagination and can delete
     # some basic data manipulation (ex highest temp, avg temp etc)
 
@@ -27,9 +26,9 @@ def index():
             FROM weather_data 
             WHERE user_id = ?
             ''', session["user_id"]) or []
-        if not weather_data_set:
-            flash("No weather data found! Please search and add a city first.", "warning")
-            return redirect(url_for('weather.search_city_info'))
+        # if not weather_data_set:
+            # flash("No weather data found! Please search and add a city first.", "warning")
+            # return redirect(url_for('weather.search_city_info'))
 
         rows: list[dict] = SQL("SELECT country_code FROM users WHERE id = ?", session["user_id"]) or []
         current_country_code: str = rows[0]["country_code"].capitalize()
