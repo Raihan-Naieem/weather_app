@@ -9,9 +9,6 @@ dashboard = Blueprint("dashboard", __name__)
 @dashboard.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    # TODO: 
-    # will show added city with pagination and can delete
-    # some basic data manipulation (ex highest temp, avg temp etc)
 
     if request.method == "GET":
         weather_data_set: list[dict] = SQL('''

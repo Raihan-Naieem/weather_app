@@ -17,7 +17,8 @@ def register():
         country_names: list[str] = list(get_country_dict().keys())
 
         if not country_name:
-            return "country name not found", 404 #FIX: fix this shit
+            flash("Enter country name!", "danger")
+            return render_template("auth/register.html", navbar=False, country_name=country_name)
 
         country_name = country_name.capitalize()
 
@@ -31,7 +32,7 @@ def register():
 
         password_hash = generate_password_hash(password)
 
-        # error if sql aint sqling
+        # error if sql isnt working
         try:
             SQL(
                 "INSERT INTO users (email, password_hash, country_name) VALUES (?, ?, ?)",
