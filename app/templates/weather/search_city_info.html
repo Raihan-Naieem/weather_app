@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-  Hello
+  Search city
 {% endblock %}
 
 {% block body %}
 
 <div class="d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow-lg w-100 rounded-5" style="max-width: 400px;">
+  <div class="card shadow-lg w-100 rounded-5 blur" style="max-width: 400px;">
     <div class="card-body text-center p-4">
 			<form action="{{ url_for('weather.search_city_info') }}" method="post" class="w-100" style="max-width: 350px;">
 				
@@ -14,7 +14,10 @@
 				
 				<div class="mb-4">
 					<input 
-						type="text" class="form-control form-control-lg rounded-4" id="city" name="city"
+						type="text" 
+						class="form-control form-control-lg rounded-4 text-center w-75 mx-auto blur"
+						id="city" 
+						name="city"
 						placeholder="Enter city"
 						value="{{ request.form.get('city', '') }}"
 						list="city-list"
@@ -30,7 +33,7 @@
 				</div>
 				
 				<div class="d-flex justify-content-center ">
-						<button type="submit" class="btn btn-primary py-0 rounded-1">Search</button>
+						<button type="submit" class="btn btn-outline-primary py-2 px-4 rounded-4">Search</button>
 				</div>
 				
 			</form>

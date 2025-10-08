@@ -13,40 +13,42 @@
   </head>
   <body>
     {% if navbar|default(true) %}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg blur border border-white border-opacity-50 rounded-5 mt-2 mx-2">
       <div class="container-fluid">
         <a class="navbar-brand d-inline-block hover-scale" 
            href="{{ url_for('dashboard.index') }}">
           ☁️ Home
         </a>
-        <a class="navbar-brand d-inline-block hover-scale" 
-           href="{{ url_for('weather.search_city_info') }}">
-           Search City
-        </a>
+
         <!-- Navbar toggle for small screens -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
-                aria-label="Toggle navigation">
+        <button 
+					class="navbar-toggler"
+					type="button" 
+					data-bs-toggle="collapse"
+					data-bs-target="#mobileNav"
+					aria-controls="mobileNav"
+					aria-expanded="false"
+					aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Logout link right -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link d-inline-block hover-scale" 
-                 href="{{ url_for('auth.logout') }}">
-                 Logout
-              </a>
-            </li>
-          </ul>
-        </div>
+				<div class="collapse navbar-collapse" id="mobileNav">
+					<ul class="navbar-nav w-100">
+						<li class="nav-item">
+							<a class="navbar-brand d-inline-block hover-scale" href="{{ url_for('weather.search_city_info') }}">Search City</a>
+						</li>
+						<li class="nav-item ms-lg-auto">
+							<a class="navbar-brand d-inline-block hover-scale" href="{{ url_for('auth.logout') }}">Logout</a>
+						</li>
+					</ul>
+				</div>
+
+
       </div>
     </nav>
     {% endif %}
 
-    <!-- Floating Flash Messages -->
-    <div class="position-fixed top-0 start-50 translate-middle-x mt-5 w-100" style="z-index: 1050; max-width: 600px;">
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-5 w-100 blur" style="z-index: 1050; max-width: 600px;">
       {% for category, message in get_flashed_messages(with_categories=true) %}
       <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm mb-2 mx-3">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>

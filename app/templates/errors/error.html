@@ -7,7 +7,7 @@
 <div class="d-flex flex-column justify-content-center align-items-center vh-100 text-center">
 	<h1 class="display-2 text-danger">{{ error.code }}-{{ error.name }}</h1>
     <p class="mb-4">{{ error.description }}</p>
-    <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary">Go Home</a>
+    <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-primary">Go Home</a>
 </div>
 {% endblock %}
 

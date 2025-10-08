@@ -25,7 +25,7 @@ def index():
             ''', session["user_id"]) or []
 
         rows: list[dict] = SQL("SELECT country_name FROM users WHERE id = ?", session["user_id"]) or []
-        current_country_name: str = rows[0]["country_name"].capitalize()
+        current_country_name: str = rows[0]["country_name"].title()
         
 
 
@@ -35,8 +35,9 @@ def index():
                                ,available_names=list(get_country_dict().keys()))
 
 @dashboard.route("/update_country_name", methods=["POST"])
+@login_required
 def update_country_name():
-    update_name = request.form.get("country_name", "").strip().capitalize()
+    update_name = request.form.get("country_name", "").strip().title()
     available_names = list(get_country_dict().keys())
 
     if not update_name:
@@ -56,6 +57,7 @@ def update_country_name():
     return redirect(url_for("dashboard.index"))
 
 @dashboard.route("/delete_row", methods=["POST"])
+@login_required
 def delete_row():
     id = request.args.get('id', type=int)
     if not id:

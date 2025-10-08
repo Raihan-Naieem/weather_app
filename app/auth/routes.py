@@ -16,11 +16,19 @@ def register():
         country_name = request.form.get("country_name")
         country_names: list[str] = list(get_country_dict().keys())
 
+
+        rows: list[dict[Any, Any]] = SQL("SELECT * FROM users WHERE email = ?", email) or []
+
+        # if user data in database
+        if len(rows) != 0:
+            flash("email already registered!", "danger")
+            return render_template("auth/register.html", navbar=False)
+
         if not country_name:
             flash("Enter country name!", "danger")
             return render_template("auth/register.html", navbar=False, country_name=country_name)
 
-        country_name = country_name.capitalize()
+        country_name = country_name.title()
 
         if country_name not in country_names:
             flash("Invalid country name!", "danger")

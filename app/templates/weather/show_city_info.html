@@ -5,26 +5,28 @@
 Weather Report
 {% endblock %}
 
+
 {% block body %}
 <div class="d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow-lg w-100 rounded-5" style="max-width: 400px;">
+  <div class="card shadow-lg blur rounded-5 col-10 col-sm-8 col-md-6 col-lg-3">
+
     <div class="card-body text-center p-4">
 
-      <h4 class="card-title mb-4">🌤 Weather Report</h4>
+      <h4 class="card-title mb-4 fs-2 fs-md-6 fs-lg-3">🌤 Weather Report</h4>
 
-      <p class="mb-3 fs-5">
+      <p class="mb-3 fs-4 fs-md-5">
         <strong>Status:</strong> {{ weather_info.status }}
       </p>
-      <p class="mb-3 fs-5">
+      <p class="mb-3 fs-4 fs-md-5">
         <strong>Temperature:</strong> {{ weather_info.temperature }} °C
       </p>
-      <p class="mb-4 fs-5">
+      <p class="mb-4 fs-4 fs-md-5">
         <strong>Wind Speed:</strong> {{ weather_info.wind }} m/s
       </p>
 
       <form action="{{ url_for('weather.add_city_info') }}" method="post">
-        <button type="submit" class="btn btn-outline-primary btn-md rounded-4">
-           Add City
+        <button type="submit" class="btn btn-outline-primary btn-lg rounded-5 w-75 mx-auto">
+          Add City
         </button>
       </form>
 
@@ -32,4 +34,5 @@ Weather Report
   </div>
 </div>
 {% endblock %}
+
 

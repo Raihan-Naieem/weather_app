@@ -6,65 +6,72 @@
 
 {% block body %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="form-container w-100">
-    <div class="card shadow-sm">
-      <div class="card-body p-4 p-md-5">
-        <h2 class="card-title text-center mb-4">Register</h2>
-        <form action="/register" method="post">
-    
-          <div class="form-input-spacing">
+  <div class="col-10 col-sm-8 col-md-6 col-lg-4">
+    <div class="card shadow rounded-5 blur border border-white border-opacity-50">
+      <div class="card-body p-5">
+        <h2 class="card-title text-center mb-4 fs-2">Register</h2>
+        <form action="/register" method="post" class="py-3">
+
+          <div class="mb-4">
             <input 
-							type="email" 
-							class="form-control 
-							form-control-lg text-center" 
-							id="email" 
-							name="email"
-            value=" {{ request.form.get('email', '') }}" placeholder="Enter email" required>
+              type="email" 
+              class="form-control form-control-lg text-center blur" 
+              id="email" 
+              name="email"
+              value="{{ request.form.get('email', '') }}" 
+              placeholder="Enter email" 
+              required>
           </div>
 
-          <div class="form-input-spacing">
+          <div class="mb-4">
             <input 
-							class="form-control form-control-lg text-center" 
-							list="country_name_list" name="country_name" 
-							id="country_name" placeholder="Enter your country name"
-            	value="{{ request.form.get('country_name', '') }}"
-							autocomplete="off"
-             	required>
+              class="form-control form-control-lg text-center blur" 
+              list="country_name_list" 
+              name="country_name" 
+              id="country_name" 
+              placeholder="Enter your country name"
+              value="{{ request.form.get('country_name', '') }}"
+              autocomplete="off"
+              required>
             <datalist id="country_name_list">
               {% for country_name in country_names %}
                 <option value="{{ country_name }}"></option>
               {% endfor %}
             </datalist>
           </div>
-          
-          <div class="form-input-spacing">
+
+          <div class="mb-4">
             <input 
-							type="password" 
-							class="form-control form-control-lg text-center" 
-							id="password" name="password" 
-							placeholder="Enter password" 
-							required>
+              type="password" 
+              class="form-control form-control-lg text-center blur" 
+              id="password" 
+              name="password" 
+              placeholder="Enter password" 
+              required>
           </div>
 
-          <div class="form-input-spacing">
+          <div class="mb-4">
             <input 
-							type="password" 
-							class="form-control form-control-lg text-center" 
-							id="confirm_password" name="confirm_password" 
-							placeholder="Confirm password" 
-							required>
+              type="password" 
+              class="form-control form-control-lg text-center blur" 
+              id="confirm_password" 
+              name="confirm_password" 
+              placeholder="Confirm password" 
+              required>
           </div>
-          
+
           <div class="d-grid mt-4">
-            <button type="submit" class="btn btn-primary btn-register">Register</button>
+            <button type="submit" class="btn btn-outline-primary btn-lg w-50 mx-auto">Register</button>
           </div>
-          
-          <div class="login-link">
+
+          <div class="text-center mt-4">
             <small>Already registered? <a href="/login">Login here</a></small>
           </div>
+
         </form>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
+

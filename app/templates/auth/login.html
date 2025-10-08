@@ -4,29 +4,48 @@ Login
 {% endblock %}
 
 
+
 {% block body %}
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="form-container">
-        <div class="card shadow">
-            <div class="card-body">
-                <h2 class="card-title text-center">Login</h2>
-                <form action="/login" method="post" class="form-padding">
-                    <div class="form-input-spacing">
-                        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Enter email" 
-                        value=" {{ request.form.get('email', '') }}" required>
-                    </div>
-                    <div class="form-input-spacing">
-                        <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Enter password" required>
-                    </div>
-                    <div class="d-grid mt-5">
-                        <button type="submit" class="btn btn-primary btn-lg btn-register">Login</button>
-                    </div>
-                    <div class="login-link">
-                        <small>Not registered? <a href="/register">Register here</a></small>
-                    </div>
-                </form>
-            </div>
-        </div>
+  <div class="col-10 col-sm-8 col-md-6 col-lg-4">
+    <div class="card shadow rounded-5 blur border border-white border-opacity-50">
+      <div class="card-body p-5">
+        <h2 class="card-title text-center mb-4 fs-2">Login</h2>
+        <form action="/login" method="post" class="py-3">
+          <div class="mb-4">
+            <input
+              type="email"
+              class="form-control form-control-lg blur"
+              id="email"
+              name="email"
+              placeholder="Enter email"
+              value="{{ request.form.get('email', '') }}"
+              required>
+          </div>
+
+          <div class="mb-4">
+            <input
+              type="password"
+              class="form-control form-control-lg blur"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+              required>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-outline-primary btn-lg w-50  mx-auto">
+              Login
+            </button>
+          </div>
+
+          <div class="text-center mt-4">
+            <small>Not registered? <a href="/register">Register here</a></small>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
+

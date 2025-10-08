@@ -8,6 +8,7 @@ weather = Blueprint("weather", __name__)
 
 
 @weather.route("/search_city_info", methods=["GET","POST"])
+@login_required
 def search_city_info():
     if request.method == "POST":
         city: str = request.form.get("city", "")
