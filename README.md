@@ -1,4 +1,10 @@
 # Weather Dashboard Web Application
+## A modular Flask-based Weather Dashboard app containerized with Docker, served via Nginx, and powered by the OpenWeatherMap API for real-time global weather data.
+
+[![Python](https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white)](https://www.python.org/) [![Flask](https://img.shields.io/badge/flask-2.x-lightgrey?logo=flask&logoColor=black)](https://flask.palletsprojects.com/) [![Docker](https://img.shields.io/badge/docker-latest-blue?logo=docker&logoColor=white)](https://www.docker.com/) [![OpenWeather API](https://img.shields.io/badge/OpenWeather-API-1abc9c?logo=openweathermap&logoColor=white)](https://openweathermap.org/api)
+
+
+
 #### Video Demo:
 
 ---
@@ -11,7 +17,7 @@
 4. [Design Choices and Trade-offs](#design-choices-and-trade-offs)  
 5. [Future Considerations](#future-considerations)  
 6. [Conclusion](#conclusion)  
-7. [Running on Local Device](#to-run-it-on-local-device)
+7. [Running it on Local Device](#to-run-it-on-local-device)
 
 ---
 #### Description:
@@ -61,10 +67,10 @@ The repository has the following structure:
 │   │   └── __init__.py
 │   ├── util.py
 │   ├── templates
+│   │   ├── base.html
 │   │   ├── auth
 │   │   │   ├── login.html
 │   │   │   └── register.html
-│   │   ├── base.html
 │   │   ├── dashboard
 │   │   │   └── index.html
 │   │   ├── errors
@@ -75,6 +81,7 @@ The repository has the following structure:
 │   └── static
 │       ├── city.list.json
 │       ├── country.txt
+│       ├── style.css
 │       └── script.js
 ├── config.py
 ├── requirements.txt
@@ -90,37 +97,47 @@ The repository has the following structure:
 ## File and Module Explanations
 
 ### 1. **Core Application**
-- `app/__init__.py`  
-  Initializes the Flask app, registers blueprints (`auth`, `dashboard`, `weather`, `errors`), and connects configuration.
+`app/__init__.py`  
+ - Initializes the Flask app, registers blueprints (`auth`, `dashboard`, `weather`, `errors`).
+ - Connects configuration.
 
-- `config.py`  
-  Loads environment variables such as `SECRET_KEY` and `OPENWEATHER_API_KEY`. It also configures session handling.
+`config.py`
+ - Loads environment variables such as `SECRET_KEY` and `OPENWEATHER_API_KEY`.
+ - Configures session handling.
 
 ### 2. **Authentication**
-- `app/auth/routes.py`  
-  Handles **register, login, and logout** functionality. Sessions are managed via Flask’s session system, with password hashing applied for user security.  
-  This part of the app was fully coded by me, giving me hands-on practice with user authentication.
+`app/auth/routes.py`  
+- Handles **register, login, and logout** functionality.
+- Sessions are managed via Flask’s session system, with password hashing applied for user security.  
+- The authentication system was **coded manually (without Flask-Login or external libraries)** to better understand the underlying concepts of
+	- session handling
+	- password hashing
+	- user verification.
 
-- Templates: `templates/auth/login.html` and `register.html`  
+- Templates: `templates/auth/login.html,register.html`  
   Provide simple forms for authentication.
 
 ### 3. **Dashboard**
-- `app/dashboard/routes.py`  
-  Displays the **list of cities** saved by the user. For each city, it shows weather details and the associated country code.  
-  Includes **delete functionality** so that users can manage their city list.
+`app/dashboard/routes.py`  
+- Displays the **list of cities** saved by the user.
+- For each city, it shows weather details and the associated country code.
+- Includes **Delete** so that users can manage their city list.
 
 - Template: `templates/dashboard/index.html`  
   Shows the dashboard page where cities are listed.
 
 ### 4. **Weather**
-- `app/weather/routes.py`  
-  Provides routes to **search for a city**, retrieve its weather information, and add it to the user’s dashboard. 
-- This project uses the following **OpenWeather API request structure** to fetch weather data: 
+`app/weather/routes.py`  
+- Provides routes to **search for a city**, retrieve its weather information
+- User can add this information it to the dashboard. 
+- This project uses the following **OpenWeather API request structure** to fetch weather data:
+   
   `https://api.openweathermap.org/data/2.5/weather?q=CityName,CountryCode&appid=API_KEY&units=Units`
-  Where:
+  
+  where:
 	- **CityName** → the name of the city you want weather data for (e.g., `Dhaka`).  
 	- **CountryCode** → the 2-letter ISO country code (e.g., `BD` for Bangladesh).  
-	- **API_KEY** → your personal API key obtained from OpenWeather.  
+	- **API_KEY** → your personal API key obtained from [OpenWeather](https://openweathermap.org/api).  
 	- **Units** → determines the measurement system (e.g., `metric` for Celsius & m/s, `imperial` for Fahrenheit & mph).
 
   **Example:** 
@@ -131,31 +148,21 @@ The repository has the following structure:
   - `templates/weather/show_city_info.html` (detailed city weather data).
 
 ### 5. **Errors**
-- `app/errors/__init__.py` and `templates/errors/error.html`  
-  Provide centralized error handling for cases such as 404 (page not found) or invalid API responses.
+`app/errors/__init__.py` and `templates/errors/error.html`  
+- Provide centralized error handling for cases such as 404 (page not found) or invalid API responses.
 
 ### 6. **Utilities**
-- `app/util.py`  
-  Contains helper functions that simplify repeated logic and ensure cleaner routes:  
-  1. **`get_cities` and `get_country_codes`** → parse data from `static/city.list.json` and `country.txt`.  
-     These functions ensure that city names and country codes are retrieved in a format acceptable for the OpenWeather API request structure.  
-  2. **`login_required` decorator** → enforces authentication by ensuring that certain routes can only be accessed by logged-in users.  
-  3. **Custom SQL utility function** → a helper I built to interact with the SQLite database more flexibly than the default ORM patterns.  
+`app/util.py`  
 
+##### Contains helper functions:
+1. **`get_cities` and `get_country_codes`** → parse data from `static/city_list.json` and `country_list.json`.  
+   These functions ensure that city names and country codes are formatted correctly for the OpenWeather API requests.  
+2. **`login_required` decorator** → enforces authentication by restricting access to routes only for logged-in users.  
+3. **Custom SQL utility function** → a helper I built to interact with the SQLite database more flexibly than standard ORM patterns.
 
-### 7. **Static Files**
-- `static/city.list.json` and `static/country.txt`  
-  Datasets for **cities** and **country codes** used in the OpenWeather API request.  
-- `static/script.js`  
-  Handles **auto-dismissal of flash messages** after 5 seconds to enhance user experience.  
+ 
 
-
-### 8. **Templates**
-- `templates/base.html`  
-  Provides the base layout (navigation bar, flash messages, and template inheritance).  
-- Other templates extend this base for modularity.
-
-### 9. **Deployment**
+### 8. **Deployment**
 - `Dockerfile`  
   Builds a lightweight containerized Python environment with dependencies from `requirements.txt`.  
 - `docker-compose.yml`  
@@ -186,7 +193,12 @@ The repository has the following structure:
 
 ## Conclusion
 
-This project represents a practical exercise in combining **Flask, Docker, and Nginx** into a deployable web app. While its core purpose is a weather dashboard, the real value lies in the skills developed: authentication logic, modular blueprints, containerized environments, reverse proxy setup, and future-oriented thinking about deployment and scalability.  
+This project represents a practical exercise in combining **Flask, Docker, and Nginx** into a deployable web app. While its core purpose is a weather dashboard, the real value lies in the skills developed: 
+	- authentication logic
+	- modular blueprints
+	- containerized environments
+	- reverse proxy setup
+	- future-oriented thinking about **deployment** and **scalability**.  
 
 I view this as both a learning milestone and a strong foundation for more advanced projects.
 
@@ -229,33 +241,36 @@ touch .env
 
 ```bash
 SECRET_KEY = 'your secret key'
-OpenWeather_API_KEY = 'your open weather api key'
+OpenWeather_API_KEY = 'your open weather api key from'
 ```
+[👉 Get your API key here](https://openweathermap.org/api)
 
-
-
-### 3. Build and Start with Docker Compose (you have to have docker and docker-compose first)
+### 3. Build with Docker (you have to have docker and docker-compose first)
+``` bash
+docker-compose build
+```
+### 4. Start with Docker Compose
 ``` bash
 docker-compose up
 ```
 ### OR run in background
 ```bash
 
-docker compose up d
+docker compose up -d
 ```
 
-### 4. Access the App
+### 5. Access the App
 
 Open your browser and go to:  
 [http://localhost](http://localhost)
 
-### 5. To close docker container
+### 6. To close docker container
 ``` bash
-docker compose down -v
+docker compose down
 ```
 
 ### To fully close and reset (delete session and database) docker container
 ```bash
-docker compose down
+docker compose down -v
 ```
 
