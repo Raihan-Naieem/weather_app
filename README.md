@@ -247,11 +247,11 @@ OpenWeather_API_KEY = 'your open weather api key from'
 
 ### 3. Build with Docker (you have to have docker and docker-compose first)
 ``` bash
-docker-compose build
+docker compose build
 ```
 ### 4. Start with Docker Compose
 ``` bash
-docker-compose up
+docker compose up
 ```
 ### OR run in background
 ```bash
