@@ -5,7 +5,7 @@
 
 
 
-#### Video Demo:
+#### Video Demo: https://youtu.be/oS4Rd4KVmFM
 
 ---
 
@@ -213,23 +213,7 @@ cd weather_app
 ```
 
 
-### 2. Create and Activate a Virtual Environment
-
-##### On **Linux/macOS**:
-
-``` bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-##### On **Windows (PowerShell)**:
-
-```bash
-python -m venv venv
-.\venv\Scripts\activate
-```
-
-### 3. Create ***.env*** File
+### 2. Create ***.env*** File
 
 ##### Create a ***.env*** file in the project root:
 
