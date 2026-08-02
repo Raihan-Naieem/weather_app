@@ -5,7 +5,11 @@
 
 
 
-#### Video Demo: https://youtu.be/oS4Rd4KVmFM
+#### Live URL: https://weather-app-pq79.onrender.com/
+
+#### Video Demo (YouTube): https://youtu.be/oS4Rd4KVmFM
+
+#### Video Demo (Local): [video/demo.mp4](video/demo.mp4)
 
 ---
 
