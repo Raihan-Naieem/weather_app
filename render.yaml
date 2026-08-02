@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: weather-app
+    runtime: docker
+    plan: free
+    dockerCommand: "gunicorn --workers=1 --bind=0.0.0.0:$PORT app:create_app"
+    envVars:
+      - key: SECRET_KEY
+        sync: false
+      - key: OPENWEATHER_API_KEY
+        sync: false

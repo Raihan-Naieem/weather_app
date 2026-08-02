@@ -215,17 +215,17 @@ cd weather_app
 
 ### 2. Create ***.env*** File
 
-##### Create a ***.env*** file in the project root:
+##### Copy the ***.env.example*** file and rename it to ***.env***:
 
 ```bash
-touch .env
+cp .env.example .env
 ```
 
 ##### Add your keys inside .env:
 
 ```bash
 SECRET_KEY = 'your secret key'
-OpenWeather_API_KEY = 'your open weather api key from'
+OPENWEATHER_API_KEY = 'your open weather api key'
 ```
 [👉 Get your API key here](https://openweathermap.org/api)
 
